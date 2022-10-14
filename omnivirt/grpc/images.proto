@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package omnivirt;
+
+option cc_generic_services = true;
+
+
+service GrpcService {
+    rpc list_images (google.protobuf.Empty) returns (ListImageResponse) {}
+}
+
+message ListImageResponse {
+    map<string, string> result = 1; 
+}
