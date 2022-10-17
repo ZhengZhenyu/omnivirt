@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Tested image on win
+* Modify image record format
 * Add gitignore
 * Cleanup codebase
 * Finalize image-download

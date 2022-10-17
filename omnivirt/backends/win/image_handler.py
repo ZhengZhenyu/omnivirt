@@ -1,3 +1,4 @@
+import copy
 import lzma
 import wget
 import os
@@ -24,15 +25,15 @@ class WinImageHandler(object):
 
         # Download the image
         img_name = wget.filename_from_url(images['remote'][img_to_download]['path'])
-        img_dict = {
-            img_to_download: images['remote'][img_to_download]
-        }
+        img_dict = copy.deepcopy(images['remote'][img_to_download])
+
         if not os.path.exists(os.path.join(self.image_dir, img_name)):
             self.LOG.debug(f'Downloading image: {img_to_download} from remote repo ...')
-            img_dict[img_to_download]['status'] = constants.IMAGE_STATUS_DOWNLOADING
+            img_dict['location'] = constants.IMAGE_LOCATION_LOCAL
+            img_dict['status'] = constants.IMAGE_STATUS_DOWNLOADING
             images['local'][img_to_download] = img_dict
             omni_utils.save_image_data(self.image_record_file, images)
-            wget.download(url=images[img_to_download]['path'], out=os.path.join(self.image_dir, img_name), bar=None)
+            wget.download(url=images['remote'][img_to_download]['path'], out=os.path.join(self.image_dir, img_name), bar=None)
             self.LOG.debug(f'Image: {img_to_download} succesfully downloaded from remote repo ...')
     
         # Decompress the image
@@ -51,8 +52,8 @@ class WinImageHandler(object):
             outs, errs = ps.run(cmd.format(os.path.join(self.image_dir, qcow2_name), os.path.join(self.image_dir, vhdx_name)))
     
         # Record local image
-        img_dict[img_to_download]['status'] = constants.IMAGE_STATUS_DOWNLOADING
-        img_dict[img_to_download]['path'] = os.path.join(self.image_dir, vhdx_name)
+        img_dict['status'] = constants.IMAGE_STATUS_READY
+        img_dict['path'] = os.path.join(self.image_dir, vhdx_name)
         images['local'][img_to_download] = img_dict
         omni_utils.save_image_data(self.image_record_file, images)
         self.LOG.debug(f'Image: {img_to_download} is ready ...')

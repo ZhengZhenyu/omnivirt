@@ -20,14 +20,9 @@ class ImagerService(images_pb2_grpc.GrpcServiceServicer):
         self.work_dir = self.CONF.conf.get('default', 'work_dir')
         self.image_dir = os.path.join(self.work_dir, self.CONF.conf.get('default', 'image_dir'))
         self.img_record_file = os.path.join(self.image_dir, 'images.json')
+        # TODO: Use different backend for different OS
         self.backend = win_image_handler.WinImageHandler(
             self.CONF, self.work_dir, self.image_dir, self.img_record_file, LOG)
-
-    def load_data(self):
-        return utils.load_image_data(self.img_record_file)
-    
-    def save_data(self, data):
-        return utils.save_image_data(self.img_record_file, data)
 
     def list_images(self, request, context):
         LOG.debug(f"Get request to list images ...")
