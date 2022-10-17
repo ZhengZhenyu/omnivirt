@@ -49,13 +49,10 @@ def format_mac_addr(mac_str):
 
 def load_image_data(image_file):
     with open(image_file, 'r', encoding='utf-8') as fr:
-            images = json.load(fr)['images']
+            images = json.load(fr)
         
     return images
 
 def save_image_data(image_file, data):
-    data_to_save = {
-        'images': data
-    }
     with open(image_file, 'w', encoding='utf-8') as fw:
-            json.dump(data_to_save, fw, indent=4, ensure_ascii=False)
+            json.dump(data, fw, indent=4, ensure_ascii=False)

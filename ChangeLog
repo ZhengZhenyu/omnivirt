@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Add gitignore
 * Cleanup codebase
 * Finalize image-download
 * Refactor project to use grpc

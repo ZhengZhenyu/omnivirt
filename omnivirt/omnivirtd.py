@@ -64,11 +64,10 @@ def init(config, LOG):
             images[image.name] = image.to_dict()
 
         image_body = {
-            'images': images
+            'remote': images,
+            'local': {}
         }
-        with open(img_record_file, 'w', encoding='utf-8') as fw:
-            json.dump(image_body, fw, indent=4, ensure_ascii=False)
-
+        utils.save_image_data(img_record_file, image_body)
 
 def serve(CONF, LOG):
     '''

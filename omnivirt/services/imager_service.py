@@ -31,23 +31,24 @@ class ImagerService(images_pb2_grpc.GrpcServiceServicer):
 
     def list_images(self, request, context):
         LOG.debug(f"Get request to list images ...")
-        images = self.load_data()
+        all_images = utils.load_image_data(self.img_record_file)
 
         ret = []
-        for _, img in images.items():
-            image = images_pb2.Image()
-            image.name = img['name']
-            image.location = img['location']
-            image.status = img['status']
-            ret.append(image)
+        for _, images in all_images.items():
+            for _, img in images.items():
+                image = images_pb2.Image()
+                image.name = img['name']
+                image.location = img['location']
+                image.status = img['status']
+                ret.append(image)
         LOG.debug(f"Responded: {ret}")
         return images_pb2.ListImageResponse(images=ret)
     
     def download_image(self, request, context):
         LOG.debug(f"Get request to download image: {request.name} ...")
-        images = self.load_data()
+        all_images = utils.load_image_data(self.img_record_file)
         
-        if request.name not in images.keys():
+        if request.name not in all_images['remote'].keys():
             LOG.debug(f'Image: {request.name} not valid for download')
             msg = f'Error: Image {request.name} is valid for download, please check image name from REMOTE IMAGE LIST using "images" command ...'
             return images_pb2.DownloadImageResponse(ret=1, msg=msg)
@@ -56,7 +57,7 @@ class ImagerService(images_pb2_grpc.GrpcServiceServicer):
         def do_download(images, name):
             self.backend.download_and_transform(images, name)
         
-        do_download(images, request.name)
+        do_download(all_images, request.name)
 
         msg = f'Downloading: {request.name} this might take a while, please check image status with "images" command.'
         return images_pb2.DownloadImageResponse(ret=0, msg=msg)
