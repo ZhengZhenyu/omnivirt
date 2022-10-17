@@ -7,6 +7,7 @@ import ssl
 from omnivirt.backends.win import powershell
 from omnivirt.utils import constants
 from omnivirt.utils import utils as omni_utils
+from omnivirt.utils import objs
 
 
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -57,6 +58,55 @@ class WinImageHandler(object):
         images['local'][img_to_download] = img_dict
         omni_utils.save_image_data(self.image_record_file, images)
         self.LOG.debug(f'Image: {img_to_download} is ready ...')
+
+        # # TODO: Cleanup temp images?
+        # pass
+    
+    def delete_image(self, images, img_to_delete):
+        img_path = images['local'][img_to_delete]['path']
+        if os.path.exists(img_path):
+            self.LOG.debug(f'Deleting: {img_path} ...')
+            os.remove(img_path)
+        
+        self.LOG.debug(f'Deleting: {img_to_delete} from image database ...')
+        del images['local'][img_to_delete]
+
+        return 0
+
+    def load_and_transform(self, images, img_to_load, path, update=False):
+
+        if update:
+            self.delete_image(images, img_to_load)
+        
+        image = objs.Image()
+        image.name = img_to_load
+        image.path = ''
+        image.location = constants.IMAGE_LOCATION_LOCAL
+        image.status = constants.IMAGE_STATUS_INIT
+        images['local'][image.name] = image.to_dict()
+        omni_utils.save_image_data(self.image_record_file, images)
+
+        # Decompress the image
+        self.LOG.debug(f'Decompressing image file: {path} ...')
+        qcow2_name = f'{img_to_load}.qcow2'
+        with open(path, 'rb') as pr, open(os.path.join(self.image_dir, qcow2_name), 'wb') as pw:
+            data = pr.read()
+            data_dec = lzma.decompress(data)
+            pw.write(data_dec)
+        
+        # Convert the qcow2 img to vhdx
+        vhdx_name = img_to_load + '.vhdx'
+        self.LOG.debug(f'Converting image file: {qcow2_name} to {vhdx_name} ...')
+        with powershell.PowerShell('GBK') as ps:
+            cmd = 'qemu-img convert -O vhdx {0} {1}'
+            outs, errs = ps.run(cmd.format(os.path.join(self.image_dir, qcow2_name), os.path.join(self.image_dir, vhdx_name)))
+    
+        # Record local image
+        image.path = os.path.join(self.image_dir, vhdx_name)
+        image.status = constants.IMAGE_STATUS_READY
+        images['local'][image.name] = image.to_dict()
+        omni_utils.save_image_data(self.image_record_file, images)
+        self.LOG.debug(f'Image: {vhdx_name} is ready ...')
 
         # # TODO: Cleanup temp images?
         # pass

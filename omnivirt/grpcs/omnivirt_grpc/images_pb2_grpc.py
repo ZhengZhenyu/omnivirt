@@ -22,7 +22,17 @@ class GrpcServiceStub(object):
         self.download_image = channel.unary_unary(
                 '/omnivirt.GrpcService/download_image',
                 request_serializer=images__pb2.DownloadImageRequest.SerializeToString,
-                response_deserializer=images__pb2.DownloadImageResponse.FromString,
+                response_deserializer=images__pb2.GeneralImageResponse.FromString,
+                )
+        self.load_image = channel.unary_unary(
+                '/omnivirt.GrpcService/load_image',
+                request_serializer=images__pb2.LoadImageRequest.SerializeToString,
+                response_deserializer=images__pb2.GeneralImageResponse.FromString,
+                )
+        self.delete_image = channel.unary_unary(
+                '/omnivirt.GrpcService/delete_image',
+                request_serializer=images__pb2.DeleteImageRequest.SerializeToString,
+                response_deserializer=images__pb2.GeneralImageResponse.FromString,
                 )
 
 
@@ -41,6 +51,18 @@ class GrpcServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def load_image(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def delete_image(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GrpcServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -52,7 +74,17 @@ def add_GrpcServiceServicer_to_server(servicer, server):
             'download_image': grpc.unary_unary_rpc_method_handler(
                     servicer.download_image,
                     request_deserializer=images__pb2.DownloadImageRequest.FromString,
-                    response_serializer=images__pb2.DownloadImageResponse.SerializeToString,
+                    response_serializer=images__pb2.GeneralImageResponse.SerializeToString,
+            ),
+            'load_image': grpc.unary_unary_rpc_method_handler(
+                    servicer.load_image,
+                    request_deserializer=images__pb2.LoadImageRequest.FromString,
+                    response_serializer=images__pb2.GeneralImageResponse.SerializeToString,
+            ),
+            'delete_image': grpc.unary_unary_rpc_method_handler(
+                    servicer.delete_image,
+                    request_deserializer=images__pb2.DeleteImageRequest.FromString,
+                    response_serializer=images__pb2.GeneralImageResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -94,6 +126,40 @@ class GrpcService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/download_image',
             images__pb2.DownloadImageRequest.SerializeToString,
-            images__pb2.DownloadImageResponse.FromString,
+            images__pb2.GeneralImageResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def load_image(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/load_image',
+            images__pb2.LoadImageRequest.SerializeToString,
+            images__pb2.GeneralImageResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def delete_image(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/delete_image',
+            images__pb2.DeleteImageRequest.SerializeToString,
+            images__pb2.GeneralImageResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

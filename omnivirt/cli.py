@@ -50,8 +50,20 @@ def download_image(name):
 
 
 @click.command()
-def init():
-    omnivirtd.init()
+@click.argument('name')
+@click.option('--path', help='Image file to load')
+def load_image(name, path):
+    omnivirt_client = client.Client()
+    ret = omnivirt_client.load_image(name, path)
+    print(ret['msg'])
+
+
+@click.command()
+@click.argument('name')
+def delete_image(name):
+    omnivirt_client = client.Client()
+    ret = omnivirt_client.delete_image(name)
+    print(ret['msg'])
 
 
 @click.command()
@@ -75,6 +87,6 @@ if __name__ == '__main__':
     cli.add_command(list)
     cli.add_command(images)
     cli.add_command(download_image)
-    cli.add_command(init)
+    cli.add_command(load_image)
     cli.add_command(launch)
     cli()

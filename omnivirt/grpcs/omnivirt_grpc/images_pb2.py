@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cimages.proto\x12\x08omnivirt\"7\n\x05Image\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08location\x18\x02 \x01(\t\x12\x0e\n\x06status\x18\x03 \x01(\t\"\x12\n\x10ListImageRequest\"4\n\x11ListImageResponse\x12\x1f\n\x06images\x18\x01 \x03(\x0b\x32\x0f.omnivirt.Image\"$\n\x14\x44ownloadImageRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"1\n\x15\x44ownloadImageResponse\x12\x0b\n\x03ret\x18\x01 \x01(\r\x12\x0b\n\x03msg\x18\x02 \x01(\t2\xac\x01\n\x0bGrpcService\x12H\n\x0blist_images\x12\x1a.omnivirt.ListImageRequest\x1a\x1b.omnivirt.ListImageResponse\"\x00\x12S\n\x0e\x64ownload_image\x12\x1e.omnivirt.DownloadImageRequest\x1a\x1f.omnivirt.DownloadImageResponse\"\x00\x42\x03\x80\x01\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cimages.proto\x12\x08omnivirt\"7\n\x05Image\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08location\x18\x02 \x01(\t\x12\x0e\n\x06status\x18\x03 \x01(\t\"\x12\n\x10ListImageRequest\"4\n\x11ListImageResponse\x12\x1f\n\x06images\x18\x01 \x03(\x0b\x32\x0f.omnivirt.Image\"$\n\x14\x44ownloadImageRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\".\n\x10LoadImageRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\"\"\n\x12\x44\x65leteImageRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"0\n\x14GeneralImageResponse\x12\x0b\n\x03ret\x18\x01 \x01(\r\x12\x0b\n\x03msg\x18\x02 \x01(\t2\xc7\x02\n\x0bGrpcService\x12H\n\x0blist_images\x12\x1a.omnivirt.ListImageRequest\x1a\x1b.omnivirt.ListImageResponse\"\x00\x12R\n\x0e\x64ownload_image\x12\x1e.omnivirt.DownloadImageRequest\x1a\x1e.omnivirt.GeneralImageResponse\"\x00\x12J\n\nload_image\x12\x1a.omnivirt.LoadImageRequest\x1a\x1e.omnivirt.GeneralImageResponse\"\x00\x12N\n\x0c\x64\x65lete_image\x12\x1c.omnivirt.DeleteImageRequest\x1a\x1e.omnivirt.GeneralImageResponse\"\x00\x42\x03\x80\x01\x01\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'images_pb2', globals())
@@ -29,8 +29,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _LISTIMAGERESPONSE._serialized_end=155
   _DOWNLOADIMAGEREQUEST._serialized_start=157
   _DOWNLOADIMAGEREQUEST._serialized_end=193
-  _DOWNLOADIMAGERESPONSE._serialized_start=195
-  _DOWNLOADIMAGERESPONSE._serialized_end=244
-  _GRPCSERVICE._serialized_start=247
-  _GRPCSERVICE._serialized_end=419
+  _LOADIMAGEREQUEST._serialized_start=195
+  _LOADIMAGEREQUEST._serialized_end=241
+  _DELETEIMAGEREQUEST._serialized_start=243
+  _DELETEIMAGEREQUEST._serialized_end=277
+  _GENERALIMAGERESPONSE._serialized_start=279
+  _GENERALIMAGERESPONSE._serialized_end=327
+  _GRPCSERVICE._serialized_start=330
+  _GRPCSERVICE._serialized_end=657
 # @@protoc_insertion_point(module_scope)
