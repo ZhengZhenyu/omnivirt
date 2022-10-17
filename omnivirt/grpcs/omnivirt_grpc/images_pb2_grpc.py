@@ -2,8 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-import images_pb2 as images__pb2
+from omnivirt.grpcs.omnivirt_grpc import images_pb2 as images__pb2
 
 
 class GrpcServiceStub(object):
@@ -17,8 +16,13 @@ class GrpcServiceStub(object):
         """
         self.list_images = channel.unary_unary(
                 '/omnivirt.GrpcService/list_images',
-                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                request_serializer=images__pb2.ListImageRequest.SerializeToString,
                 response_deserializer=images__pb2.ListImageResponse.FromString,
+                )
+        self.download_image = channel.unary_unary(
+                '/omnivirt.GrpcService/download_image',
+                request_serializer=images__pb2.DownloadImageRequest.SerializeToString,
+                response_deserializer=images__pb2.DownloadImageResponse.FromString,
                 )
 
 
@@ -31,13 +35,24 @@ class GrpcServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def download_image(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GrpcServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'list_images': grpc.unary_unary_rpc_method_handler(
                     servicer.list_images,
-                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    request_deserializer=images__pb2.ListImageRequest.FromString,
                     response_serializer=images__pb2.ListImageResponse.SerializeToString,
+            ),
+            'download_image': grpc.unary_unary_rpc_method_handler(
+                    servicer.download_image,
+                    request_deserializer=images__pb2.DownloadImageRequest.FromString,
+                    response_serializer=images__pb2.DownloadImageResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -61,7 +76,24 @@ class GrpcService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/list_images',
-            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            images__pb2.ListImageRequest.SerializeToString,
             images__pb2.ListImageResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def download_image(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/download_image',
+            images__pb2.DownloadImageRequest.SerializeToString,
+            images__pb2.DownloadImageResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

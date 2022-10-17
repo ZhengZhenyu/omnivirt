@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: omnivirt
+Version: 0.0.1.dev1
+Summary: A tool to run openEuler instances on all platforms
+Home-page: https://github.com/ZhengZhenyu/omnivirt.git
+Author: Zhenyu Zheng
+Author-email: zheng.zhenyu@outlook.com
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: OmniVirt
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: Mulan PSL v2
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Requires-Python: >=3.8
+License-File: AUTHORS
+
+omnivirt
+
