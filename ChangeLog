@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Cleanup codebase
+* Finalize image-download
 * Refactor project to use grpc
 * Initial Commit
 * Initial commit
