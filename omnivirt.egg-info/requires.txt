@@ -1,6 +1,0 @@
-click
-prettytable
-wget
-grpcio-tools
-os-win
-configparser

@@ -1,5 +1,6 @@
 CHANGES
 =======
 
+* Refactor project to use grpc
 * Initial Commit
 * Initial commit

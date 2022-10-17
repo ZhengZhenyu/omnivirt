@@ -1,5 +1,3 @@
-from importlib.resources import path
-import logging
 import lzma
 import wget
 import os
@@ -46,34 +44,15 @@ class WinImageHandler(object):
         self.LOG.debug(f'Converting image file: {img_name} to {vhdx_name} ...')
         images[img_to_download]['path'] = os.path.join(self.image_dir, vhdx_name)
         omni_utils.save_image_data(self.image_record_file, images)
-        # with powershell.PowerShell('GBK') as ps:
-        #     cmd = 'qemu-img convert -O vhdx {0} {1}'
-        #     outs, errs = ps.run(cmd.format(os.path.join(self.image_dir, qcow2_name), os.path.join(self.image_dir, vhdx_name)))
+        with powershell.PowerShell('GBK') as ps:
+            cmd = 'qemu-img convert -O vhdx {0} {1}'
+            outs, errs = ps.run(cmd.format(os.path.join(self.image_dir, qcow2_name), os.path.join(self.image_dir, vhdx_name)))
     
-        # # Record local image
-        # with open(img_record_file, 'r', encoding='utf-8') as fr:
-        #     local_images = json.load(fr)['images']
-    
-        # image_info = {
-        #     'image_id': image_id,
-        #     'image_path': os.path.join(image_dir, vhdx_name)
-        # }
-
-        # found = False
-        # for img in local_images:
-        #     if img['image_id'] == image_id:
-        #         img['image_path'] = image_info['image_path']
-        #         found = True
-        #         break
-    
-        # if not found:
-        #     local_images.append(image_info)
-    
-        # image_body = {
-        #         'images': local_images
-        #     }
-        # with open(img_record_file, 'w', encoding='utf-8') as fw:
-        #     json.dump(image_body, fw, indent=4, ensure_ascii=False)
+        # Record local image
+        images[img_to_download]['status'] = constants.IMAGE_STATUS_READY
+        images[img_to_download]['path'] = os.path.join(self.image_dir, vhdx_name)
+        omni_utils.save_image_data(self.image_record_file, images)
+        self.LOG.debug(f'Image: {img_to_download} is ready ...')
 
         # # TODO: Cleanup temp images?
         # pass
