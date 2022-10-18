@@ -51,7 +51,10 @@ class WinImageHandler(object):
         with powershell.PowerShell('GBK') as ps:
             cmd = 'qemu-img convert -O vhdx {0} {1}'
             outs, errs = ps.run(cmd.format(os.path.join(self.image_dir, qcow2_name), os.path.join(self.image_dir, vhdx_name)))
-    
+
+        self.LOG.debug(f'Cleanup temp files ...')
+        os.remove(os.path.join(self.image_dir, qcow2_name))
+
         # Record local image
         img_dict['status'] = constants.IMAGE_STATUS_READY
         img_dict['path'] = os.path.join(self.image_dir, vhdx_name)
@@ -59,10 +62,13 @@ class WinImageHandler(object):
         omni_utils.save_image_data(self.image_record_file, images)
         self.LOG.debug(f'Image: {img_to_download} is ready ...')
 
-        # # TODO: Cleanup temp images?
-        # pass
-    
     def delete_image(self, images, img_to_delete):
+        if img_to_delete not in images['local'].keys():
+            return 1
+        else:
+            return self._delete_image(images, img_to_delete)
+
+    def _delete_image(self, images, img_to_delete):
         img_path = images['local'][img_to_delete]['path']
         if os.path.exists(img_path):
             self.LOG.debug(f'Deleting: {img_path} ...')
@@ -70,19 +76,20 @@ class WinImageHandler(object):
         
         self.LOG.debug(f'Deleting: {img_to_delete} from image database ...')
         del images['local'][img_to_delete]
+        omni_utils.save_image_data(self.image_record_file, images)
 
         return 0
 
     def load_and_transform(self, images, img_to_load, path, update=False):
 
         if update:
-            self.delete_image(images, img_to_load)
+            self._delete_image(images, img_to_load)
         
         image = objs.Image()
         image.name = img_to_load
         image.path = ''
         image.location = constants.IMAGE_LOCATION_LOCAL
-        image.status = constants.IMAGE_STATUS_INIT
+        image.status = constants.IMAGE_STATUS_LOADING
         images['local'][image.name] = image.to_dict()
         omni_utils.save_image_data(self.image_record_file, images)
 
@@ -100,13 +107,13 @@ class WinImageHandler(object):
         with powershell.PowerShell('GBK') as ps:
             cmd = 'qemu-img convert -O vhdx {0} {1}'
             outs, errs = ps.run(cmd.format(os.path.join(self.image_dir, qcow2_name), os.path.join(self.image_dir, vhdx_name)))
-    
+        self.LOG.debug(f'Cleanup temp files ...')
+        os.remove(os.path.join(self.image_dir, qcow2_name))
+
         # Record local image
         image.path = os.path.join(self.image_dir, vhdx_name)
         image.status = constants.IMAGE_STATUS_READY
         images['local'][image.name] = image.to_dict()
         omni_utils.save_image_data(self.image_record_file, images)
         self.LOG.debug(f'Image: {vhdx_name} is ready ...')
-
-        # # TODO: Cleanup temp images?
-        # pass
+        

@@ -89,4 +89,5 @@ if __name__ == '__main__':
     cli.add_command(download_image)
     cli.add_command(load_image)
     cli.add_command(launch)
+    cli.add_command(delete_image)
     cli()

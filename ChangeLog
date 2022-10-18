@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Tested load and delete
+* Add methods to load and delete images
 * Tested image on win
 * Modify image record format
 * Add gitignore

@@ -71,7 +71,7 @@ class ImagerService(images_pb2_grpc.GrpcServiceServicer):
             update = True
 
         @utils.asyncwrapper
-        def do_load(images, name, path):
+        def do_load(images, name, path, update):
             self.backend.load_and_transform(images, name, path, update)
         
         do_load(all_images, request.name, request.path, update)
@@ -81,6 +81,10 @@ class ImagerService(images_pb2_grpc.GrpcServiceServicer):
     def delete_image(self, request, context):
         LOG.debug(f"Get request to delete image: {request.name}  ...")
         images = utils.load_image_data(self.img_record_file)
-        self.backend.delete_image(images, request.name)
-        msg = f'Image: {request.name} has been successfully deleted.'
+        ret = self.backend.delete_image(images, request.name)
+        if ret == 0:
+            msg = f'Image: {request.name} has been successfully deleted.'
+        elif ret == 1:
+            msg = f'Image: {request.name} does not exist, please check again.'
+
         return images_pb2.GeneralImageResponse(ret=0, msg=msg)
