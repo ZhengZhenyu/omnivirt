@@ -1,0 +1,25 @@
+syntax = "proto3";
+package omnivirt;
+
+option cc_generic_services = true;
+
+
+service GrpcService {
+    rpc list_instances (ListInstancesRequest) returns (ListInstancesResponse) {}
+}
+
+
+message Instance {
+    string name = 1;
+    string image = 2;
+    string ip_address = 3;
+}
+
+
+message ListInstancesRequest {
+}
+
+
+message ListInstancesResponse {
+    repeated Instance instances = 1;
+}

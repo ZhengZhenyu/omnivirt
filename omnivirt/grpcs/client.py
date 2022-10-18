@@ -2,7 +2,8 @@ import grpc
 import os
 
 from omnivirt.grpcs.omnivirt_grpc import images_pb2, images_pb2_grpc
-from omnivirt.grpcs import images
+from omnivirt.grpcs.omnivirt_grpc import instances_pb2, instances_pb2_grpc
+from omnivirt.grpcs import images, instances
 from omnivirt.utils import constants
 from omnivirt.utils import utils as omnivirt_utils
 
@@ -14,9 +15,10 @@ class Client(object):
         channel = grpc.insecure_channel(channel_target)
 
         images_client = images_pb2_grpc.GrpcServiceStub(channel)
+        instances_client = instances_pb2_grpc.GrpcServiceStub(channel)
 
         self._images = images.Image(images_client)
-
+        self._instances = instances.Instance(instances_client)
 
     @omnivirt_utils.response2dict
     def list_images(self, filters=None):
@@ -68,3 +70,13 @@ class Client(object):
         """
 
         return self._images.delete(name)
+
+    @omnivirt_utils.response2dict
+    def list_instances(self):
+        """ [IMAGE] List instances
+
+        :param filters(list): None
+        :return: dict -- list of instances' info
+        """
+
+        return self._instances.list()

@@ -5,7 +5,7 @@ import lzma
 import shutil
 import time
 
-from omnivirt import vmops
+from omnivirt.backends.win import vmops
 from omnivirt import utils
 from omnivirt import constants
 from omnivirt import powershell

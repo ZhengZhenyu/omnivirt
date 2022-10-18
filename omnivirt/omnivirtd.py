@@ -10,10 +10,10 @@ import sys
 import time
 import wget
 
-from omnivirt import vmops
-from omnivirt.grpcs.omnivirt_grpc import images_pb2_grpc
-from omnivirt.grpcs.omnivirt_grpc import images_pb2
-from omnivirt.services import imager_service
+from omnivirt.backends.win import vmops
+from omnivirt.grpcs.omnivirt_grpc import images_pb2, images_pb2_grpc
+from omnivirt.grpcs.omnivirt_grpc import instances_pb2, instances_pb2_grpc
+from omnivirt.services import imager_service, instance_service
 from omnivirt.utils import constants
 from omnivirt.utils import exceptions
 from omnivirt.utils import objs
@@ -75,6 +75,7 @@ def serve(CONF, LOG):
     '''
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     images_pb2_grpc.add_GrpcServiceServicer_to_server(imager_service.ImagerService(CONF), server)
+    instances_pb2_grpc.add_GrpcServiceServicer_to_server(instance_service.InstanceService(CONF), server)
     server.add_insecure_port('[::]:50052')
     server.start()
     LOG.debug('OmniVirtd Service Started ...')

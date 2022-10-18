@@ -1,7 +1,7 @@
 import click
 import prettytable as pt
 
-from omnivirt import vmops
+from omnivirt.backends.win import vmops
 from omnivirt import omnivirtd
 from omnivirt.grpcs import client
 
@@ -17,9 +17,9 @@ def list():
 
     for instance in ret:
         tb.add_row(
-            [instance.name,
-            instance.image,
-            instance.ip])
+            [instance['name'],
+            instance['image'],
+            instance['ip']])
 
     print(tb)
 
