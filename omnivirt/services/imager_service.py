@@ -9,7 +9,7 @@ from omnivirt.utils import utils
 LOG = logging.getLogger(__name__)
 
 
-class ImagerService(images_pb2_grpc.GrpcServiceServicer):
+class ImagerService(images_pb2_grpc.ImageGrpcServiceServicer):
     '''
     The Imager GRPC Handler
     '''

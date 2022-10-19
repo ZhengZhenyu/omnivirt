@@ -6,10 +6,10 @@ from os_win.utils.compute import vmutils10
 from os_win import utilsfactory
 from oslo_utils import uuidutils
 
-from omnivirt import objs
-from omnivirt import constants
-from omnivirt import utils
-from omnivirt import powershell
+from omnivirt.utils import objs
+from omnivirt.utils import constants
+from omnivirt.utils import utils as omni_utils
+from omnivirt.backends.win import powershell
 
 SWITCH_NAME = 'Default Switch'
 
@@ -60,6 +60,7 @@ class VMOps(object):
                 vm.uuid = meta['uuid']
                 info = self.get_info(instance_name)
                 vm.info = info
+                vm.vm_state = constants.VM_STATE_MAP[info['EnabledState']]
                 ip_address = self.get_instance_ip_addr(instance_name)
                 vm.ip = ip_address
                 vm.image = meta['image']
@@ -71,7 +72,7 @@ class VMOps(object):
     def get_instance_ip_addr(self, instance_name):
         nic_name = instance_name + '_eth0'
         nic = self.get_vm_nics(instance_name, nic_name)
-        mac_address = utils.format_mac_addr(nic.Address)
+        mac_address = omni_utils.format_mac_addr(nic.Address)
         with powershell.PowerShell('GBK') as ps:
             outs, errs = ps.run('arp -a | findstr /i {}'.format(mac_address))
         ip_address = outs.strip(' ').split(' ')[0]

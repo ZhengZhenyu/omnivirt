@@ -14,8 +14,8 @@ class Client(object):
             channel_target = 'localhost:50052'
         channel = grpc.insecure_channel(channel_target)
 
-        images_client = images_pb2_grpc.GrpcServiceStub(channel)
-        instances_client = instances_pb2_grpc.GrpcServiceStub(channel)
+        images_client = images_pb2_grpc.ImageGrpcServiceStub(channel)
+        instances_client = instances_pb2_grpc.InstanceGrpcServiceStub(channel)
 
         self._images = images.Image(images_client)
         self._instances = instances.Instance(instances_client)

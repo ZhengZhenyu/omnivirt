@@ -74,8 +74,8 @@ def serve(CONF, LOG):
     Run the Omnivirtd Service
     '''
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    images_pb2_grpc.add_GrpcServiceServicer_to_server(imager_service.ImagerService(CONF), server)
-    instances_pb2_grpc.add_GrpcServiceServicer_to_server(instance_service.InstanceService(CONF), server)
+    images_pb2_grpc.add_ImageGrpcServiceServicer_to_server(imager_service.ImagerService(CONF), server)
+    instances_pb2_grpc.add_InstanceGrpcServiceServicer_to_server(instance_service.InstanceService(CONF), server)
     server.add_insecure_port('[::]:50052')
     server.start()
     LOG.debug('OmniVirtd Service Started ...')

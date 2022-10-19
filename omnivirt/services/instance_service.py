@@ -8,7 +8,7 @@ from omnivirt.utils import utils
 
 LOG = logging.getLogger(__name__)
 
-class InstanceService(instances_pb2_grpc.GrpcServiceServicer):
+class InstanceService(instances_pb2_grpc.InstanceGrpcServiceServicer):
     '''
     The Instance GRPC Handler
     '''
@@ -31,7 +31,8 @@ class InstanceService(instances_pb2_grpc.GrpcServiceServicer):
             instance_dict = {
                 'name': vm_obj.name,
                 'image': vm_obj.image,
-                'ip': vm_obj.ip
+                'vm_state': vm_obj.vm_state,
+                'ip_address': vm_obj.ip
             }
             ret.append(instance_dict)
             

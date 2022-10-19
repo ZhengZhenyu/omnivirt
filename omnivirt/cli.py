@@ -1,7 +1,6 @@
 import click
 import prettytable as pt
 
-from omnivirt.backends.win import vmops
 from omnivirt import omnivirtd
 from omnivirt.grpcs import client
 
@@ -10,16 +9,18 @@ from omnivirt.grpcs import client
 @click.command()
 def list():
 
-    ret = omnivirtd.list_instances()
+    omnivirt_client = client.Client()
+    ret = omnivirt_client.list_instances()
     tb = pt.PrettyTable()
 
-    tb.field_names = ["Name", "Image", "IP"]
+    tb.field_names = ["Name", "Image", "State", "IP"]
 
-    for instance in ret:
+    for instance in ret['instances']:
         tb.add_row(
             [instance['name'],
             instance['image'],
-            instance['ip']])
+            instance['vmState'],
+            instance['ipAddress']])
 
     print(tb)
 

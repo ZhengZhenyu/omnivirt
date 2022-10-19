@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Finalize instance list operation
+* Add instance service and windows handler
 * Tested load and delete
 * Add methods to load and delete images
 * Tested image on win

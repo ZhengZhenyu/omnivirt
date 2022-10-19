@@ -14,10 +14,9 @@ class Instance(object):
         self.vcpu = None
         self.ram = None
         self.disk = None
-        self.vm_state = None
         self.info = None
         self.image = None
-        self.ip = None
+        self.ip = 'N/A'
 
 
 class Image(object):

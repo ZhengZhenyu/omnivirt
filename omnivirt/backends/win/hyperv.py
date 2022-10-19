@@ -18,6 +18,6 @@ class WinInstanceHandler(object):
         self.image_record_file = image_record_file
         self.LOG = logger
 
-    def list_instances():
+    def list_instances(self):
         vms = _vmops.list_instances()
         return vms

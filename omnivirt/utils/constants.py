@@ -20,3 +20,11 @@ OPENEULER_IMGS = {
     '22.03-LTS': 'https://mirrors.tuna.tsinghua.edu.cn/openeuler/openEuler-22.03-LTS/virtual_machine_img/x86_64/openEuler-22.03-LTS-x86_64.qcow2.xz',
     '21.09': 'https://mirrors.tuna.tsinghua.edu.cn/openeuler/openEuler-21.09/virtual_machine_img/x86_64/openEuler-21.09-x86_64.qcow2.xz'
 }
+
+VM_STATE_MAP = {
+    2: 'Running',
+    3: 'Stopped',
+    11: 'Rebooting',
+    9: 'Paused',
+    6: 'Suspended'
+    }

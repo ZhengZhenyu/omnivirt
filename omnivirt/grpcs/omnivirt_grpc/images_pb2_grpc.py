@@ -5,7 +5,7 @@ import grpc
 from omnivirt.grpcs.omnivirt_grpc import images_pb2 as images__pb2
 
 
-class GrpcServiceStub(object):
+class ImageGrpcServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,28 +15,28 @@ class GrpcServiceStub(object):
             channel: A grpc.Channel.
         """
         self.list_images = channel.unary_unary(
-                '/omnivirt.GrpcService/list_images',
+                '/omnivirt.ImageGrpcService/list_images',
                 request_serializer=images__pb2.ListImageRequest.SerializeToString,
                 response_deserializer=images__pb2.ListImageResponse.FromString,
                 )
         self.download_image = channel.unary_unary(
-                '/omnivirt.GrpcService/download_image',
+                '/omnivirt.ImageGrpcService/download_image',
                 request_serializer=images__pb2.DownloadImageRequest.SerializeToString,
                 response_deserializer=images__pb2.GeneralImageResponse.FromString,
                 )
         self.load_image = channel.unary_unary(
-                '/omnivirt.GrpcService/load_image',
+                '/omnivirt.ImageGrpcService/load_image',
                 request_serializer=images__pb2.LoadImageRequest.SerializeToString,
                 response_deserializer=images__pb2.GeneralImageResponse.FromString,
                 )
         self.delete_image = channel.unary_unary(
-                '/omnivirt.GrpcService/delete_image',
+                '/omnivirt.ImageGrpcService/delete_image',
                 request_serializer=images__pb2.DeleteImageRequest.SerializeToString,
                 response_deserializer=images__pb2.GeneralImageResponse.FromString,
                 )
 
 
-class GrpcServiceServicer(object):
+class ImageGrpcServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def list_images(self, request, context):
@@ -64,7 +64,7 @@ class GrpcServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_GrpcServiceServicer_to_server(servicer, server):
+def add_ImageGrpcServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'list_images': grpc.unary_unary_rpc_method_handler(
                     servicer.list_images,
@@ -88,12 +88,12 @@ def add_GrpcServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'omnivirt.GrpcService', rpc_method_handlers)
+            'omnivirt.ImageGrpcService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class GrpcService(object):
+class ImageGrpcService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -107,7 +107,7 @@ class GrpcService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/list_images',
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.ImageGrpcService/list_images',
             images__pb2.ListImageRequest.SerializeToString,
             images__pb2.ListImageResponse.FromString,
             options, channel_credentials,
@@ -124,7 +124,7 @@ class GrpcService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/download_image',
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.ImageGrpcService/download_image',
             images__pb2.DownloadImageRequest.SerializeToString,
             images__pb2.GeneralImageResponse.FromString,
             options, channel_credentials,
@@ -141,7 +141,7 @@ class GrpcService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/load_image',
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.ImageGrpcService/load_image',
             images__pb2.LoadImageRequest.SerializeToString,
             images__pb2.GeneralImageResponse.FromString,
             options, channel_credentials,
@@ -158,7 +158,7 @@ class GrpcService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/delete_image',
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.ImageGrpcService/delete_image',
             images__pb2.DeleteImageRequest.SerializeToString,
             images__pb2.GeneralImageResponse.FromString,
             options, channel_credentials,

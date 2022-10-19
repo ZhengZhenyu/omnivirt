@@ -5,7 +5,7 @@ import grpc
 from omnivirt.grpcs.omnivirt_grpc import instances_pb2 as instances__pb2
 
 
-class GrpcServiceStub(object):
+class InstanceGrpcServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,13 +15,13 @@ class GrpcServiceStub(object):
             channel: A grpc.Channel.
         """
         self.list_instances = channel.unary_unary(
-                '/omnivirt.GrpcService/list_instances',
+                '/omnivirt.InstanceGrpcService/list_instances',
                 request_serializer=instances__pb2.ListInstancesRequest.SerializeToString,
                 response_deserializer=instances__pb2.ListInstancesResponse.FromString,
                 )
 
 
-class GrpcServiceServicer(object):
+class InstanceGrpcServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def list_instances(self, request, context):
@@ -31,7 +31,7 @@ class GrpcServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_GrpcServiceServicer_to_server(servicer, server):
+def add_InstanceGrpcServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'list_instances': grpc.unary_unary_rpc_method_handler(
                     servicer.list_instances,
@@ -40,12 +40,12 @@ def add_GrpcServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'omnivirt.GrpcService', rpc_method_handlers)
+            'omnivirt.InstanceGrpcService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class GrpcService(object):
+class InstanceGrpcService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -59,7 +59,7 @@ class GrpcService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/omnivirt.GrpcService/list_instances',
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.InstanceGrpcService/list_instances',
             instances__pb2.ListInstancesRequest.SerializeToString,
             instances__pb2.ListInstancesResponse.FromString,
             options, channel_credentials,

@@ -4,7 +4,7 @@ package omnivirt;
 option cc_generic_services = true;
 
 
-service GrpcService {
+service InstanceGrpcService {
     rpc list_instances (ListInstancesRequest) returns (ListInstancesResponse) {}
 }
 
@@ -12,7 +12,8 @@ service GrpcService {
 message Instance {
     string name = 1;
     string image = 2;
-    string ip_address = 3;
+    string vm_state = 3;
+    string ip_address = 4;
 }
 
 
