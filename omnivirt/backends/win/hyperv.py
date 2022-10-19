@@ -16,6 +16,7 @@ class WinInstanceHandler(object):
         self.conf = conf
         self.work_dir = work_dir
         self.instance_dir = instance_dir
+        self.instance_record_file = os.path.join(instance_dir, 'instances.json')
         self.image_dir = image_dir
         self.image_record_file = image_record_file
         self.LOG = logger
@@ -24,8 +25,8 @@ class WinInstanceHandler(object):
         vms = _vmops.list_instances()
         return vms
     
-    def create_instance(self, name, image_id, all_images):
-            # Create dir for the instance
+    def create_instance(self, name, image_id, instance_record, all_instances, all_images):
+        # Create dir for the instance
         vm_dict = {
             'name': name,
             'image': image_id,
@@ -40,6 +41,14 @@ class WinInstanceHandler(object):
         root_disk_path = shutil.copyfile(img_path, os.path.join(instance_path, image_id + '.vhdx'))
         _vmops.build_and_run_vm(name, image_id, False, 2, instance_path, root_disk_path)
 
+        instance_record_dict = {
+            'name': name,
+            'path': instance_path
+        }
+
+        all_instances['instances'][name] = instance_record_dict
+        omni_utils.save_json_data(instance_record, all_instances)
+
         info = _vmops.get_info(name)
         vm_dict['vm_state'] = constants.VM_STATE_MAP[info['EnabledState']]
         ip = _vmops.get_instance_ip_addr(name)
@@ -47,3 +56,16 @@ class WinInstanceHandler(object):
             vm_dict['ip_address'] = ip
 
         return vm_dict
+    
+    def delete_instance(self, name, instance_record, all_instances):
+        # Delete instance
+        _vmops.delete_instance(name)
+
+        # Cleanup files and records
+        instance_dir = all_instances['instances'][name]['path']
+        shutil.rmtree(instance_dir)
+        del all_instances['instances'][name]
+
+        omni_utils.save_json_data(instance_record, all_instances)
+
+        return 0

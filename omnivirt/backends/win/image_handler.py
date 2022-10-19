@@ -33,7 +33,7 @@ class WinImageHandler(object):
             img_dict['location'] = constants.IMAGE_LOCATION_LOCAL
             img_dict['status'] = constants.IMAGE_STATUS_DOWNLOADING
             images['local'][img_to_download] = img_dict
-            omni_utils.save_image_data(self.image_record_file, images)
+            omni_utils.save_json_data(self.image_record_file, images)
             wget.download(url=images['remote'][img_to_download]['path'], out=os.path.join(self.image_dir, img_name), bar=None)
             self.LOG.debug(f'Image: {img_to_download} succesfully downloaded from remote repo ...')
     
@@ -59,7 +59,7 @@ class WinImageHandler(object):
         img_dict['status'] = constants.IMAGE_STATUS_READY
         img_dict['path'] = os.path.join(self.image_dir, vhdx_name)
         images['local'][img_to_download] = img_dict
-        omni_utils.save_image_data(self.image_record_file, images)
+        omni_utils.save_json_data(self.image_record_file, images)
         self.LOG.debug(f'Image: {img_to_download} is ready ...')
 
     def delete_image(self, images, img_to_delete):
@@ -76,7 +76,7 @@ class WinImageHandler(object):
         
         self.LOG.debug(f'Deleting: {img_to_delete} from image database ...')
         del images['local'][img_to_delete]
-        omni_utils.save_image_data(self.image_record_file, images)
+        omni_utils.save_json_data(self.image_record_file, images)
 
         return 0
 
@@ -91,7 +91,7 @@ class WinImageHandler(object):
         image.location = constants.IMAGE_LOCATION_LOCAL
         image.status = constants.IMAGE_STATUS_LOADING
         images['local'][image.name] = image.to_dict()
-        omni_utils.save_image_data(self.image_record_file, images)
+        omni_utils.save_json_data(self.image_record_file, images)
 
         # Decompress the image
         self.LOG.debug(f'Decompressing image file: {path} ...')
@@ -114,6 +114,5 @@ class WinImageHandler(object):
         image.path = os.path.join(self.image_dir, vhdx_name)
         image.status = constants.IMAGE_STATUS_READY
         images['local'][image.name] = image.to_dict()
-        omni_utils.save_image_data(self.image_record_file, images)
+        omni_utils.save_json_data(self.image_record_file, images)
         self.LOG.debug(f'Image: {vhdx_name} is ready ...')
-        

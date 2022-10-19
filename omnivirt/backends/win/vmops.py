@@ -129,7 +129,18 @@ class VMOps(object):
                 return instance_notes
         except os_win_exc.HyperVVMNotFoundException:
             raise
-    
+
+    def delete_instance(self, vm_name):
+        # Stop the VM first.
+        self._vmutils.stop_vm_jobs(vm_name)
+        self._vmutils.set_vm_state(vm_name, os_win_const.HYPERV_VM_STATE_DISABLED)
+        self._vmutils.destroy_vm(vm_name)
+
+        while(1):
+            if not self._vmutils.vm_exists(vm_name):
+                break
+        return 0
+
     def get_vm_disks(self, vm_name):
         return self._vmutils.get_vm_disks(vm_name)
 

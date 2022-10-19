@@ -25,7 +25,7 @@ class ImagerService(images_pb2_grpc.ImageGrpcServiceServicer):
 
     def list_images(self, request, context):
         LOG.debug(f"Get request to list images ...")
-        all_images = utils.load_image_data(self.img_record_file)
+        all_images = utils.load_json_data(self.img_record_file)
 
         ret = []
         for _, images in all_images.items():
@@ -40,7 +40,7 @@ class ImagerService(images_pb2_grpc.ImageGrpcServiceServicer):
     
     def download_image(self, request, context):
         LOG.debug(f"Get request to download image: {request.name} ...")
-        all_images = utils.load_image_data(self.img_record_file)
+        all_images = utils.load_json_data(self.img_record_file)
         
         if request.name not in all_images['remote'].keys():
             LOG.debug(f'Image: {request.name} not valid for download')
@@ -58,7 +58,7 @@ class ImagerService(images_pb2_grpc.ImageGrpcServiceServicer):
 
     def load_image(self, request, context):
         LOG.debug(f"Get request to load image: {request.name} from path: {request.path} ...")
-        all_images = utils.load_image_data(self.img_record_file)
+        all_images = utils.load_json_data(self.img_record_file)
 
         msg = f'Loading: {request.name}, this might take a while, please check image status with "images" command.'
         update = False
@@ -79,7 +79,7 @@ class ImagerService(images_pb2_grpc.ImageGrpcServiceServicer):
 
     def delete_image(self, request, context):
         LOG.debug(f"Get request to delete image: {request.name}  ...")
-        images = utils.load_image_data(self.img_record_file)
+        images = utils.load_json_data(self.img_record_file)
         ret = self.backend.delete_image(images, request.name)
         if ret == 0:
             msg = f'Image: {request.name} has been successfully deleted.'

@@ -47,12 +47,12 @@ def format_mac_addr(mac_str):
     
     return ret
 
-def load_image_data(image_file):
-    with open(image_file, 'r', encoding='utf-8') as fr:
-            images = json.load(fr)
+def load_json_data(json_file):
+    with open(json_file, 'r', encoding='utf-8') as fr:
+            data = json.load(fr)
         
-    return images
+    return data
 
-def save_image_data(image_file, data):
-    with open(image_file, 'w', encoding='utf-8') as fw:
+def save_json_data(json_file, data):
+    with open(json_file, 'w', encoding='utf-8') as fw:
             json.dump(data, fw, indent=4, ensure_ascii=False)

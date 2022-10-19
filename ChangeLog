@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Debug instance create command
 * Add create instance function
 * Finalize instance list operation
 * Add instance service and windows handler

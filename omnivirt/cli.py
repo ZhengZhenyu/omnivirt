@@ -68,6 +68,13 @@ def delete_image(name):
 
 
 @click.command()
+@click.argument('name')
+def delete_instance(name):
+
+    ret = omnivirt_client.delete_instance(name)
+    print(ret['msg'])
+
+@click.command()
 @click.argument('vm_name')
 @click.option('--image', help='Image to build vm')
 def launch(vm_name, image):
@@ -101,4 +108,5 @@ if __name__ == '__main__':
     cli.add_command(load_image)
     cli.add_command(launch)
     cli.add_command(delete_image)
+    cli.add_command(delete_instance)
     cli()

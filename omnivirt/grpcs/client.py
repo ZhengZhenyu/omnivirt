@@ -86,3 +86,10 @@ class Client(object):
         """
 
         return self._instances.create(name, image)
+
+    @omnivirt_utils.response2dict
+    def delete_instance(self, name):
+        """ Delete the requested instance
+        """
+
+        return self._instances.delete(name)

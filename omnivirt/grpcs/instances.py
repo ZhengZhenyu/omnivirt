@@ -15,3 +15,9 @@ class Instance(object):
         request = instances_pb2.CreateInstanceRequest(name=name, image=image)
         response = self.client.create_instance(request)
         return response
+    
+    def delete(self, name):
+        """Delete instance"""
+        request = instances_pb2.DeleteInstanceRequest(name=name)
+        response = self.client.delete_instance(request)
+        return response

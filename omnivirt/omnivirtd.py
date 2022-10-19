@@ -1,21 +1,14 @@
 from concurrent import futures
-from datetime import datetime
 import grpc
-import json
 import logging
-import lzma
 import os
-import shutil
 import sys
 import time
-import wget
 
-from omnivirt.backends.win import vmops
 from omnivirt.grpcs.omnivirt_grpc import images_pb2, images_pb2_grpc
 from omnivirt.grpcs.omnivirt_grpc import instances_pb2, instances_pb2_grpc
 from omnivirt.services import imager_service, instance_service
 from omnivirt.utils import constants
-from omnivirt.utils import exceptions
 from omnivirt.utils import objs
 from omnivirt.utils import utils
 
@@ -40,6 +33,8 @@ def config_logging(config):
 def init(config, LOG):
     work_dir = config.conf.get('default', 'work_dir')
     image_dir = os.path.join(work_dir, config.conf.get('default', 'image_dir'))
+    instance_dir = os.path.join(work_dir, 'instances')
+    instance_record_file = os.path.join(instance_dir, 'instances.json')
     img_record_file = os.path.join(image_dir, 'images.json')
 
     LOG.debug('Initializing OmniVirtd ...')
@@ -47,6 +42,17 @@ def init(config, LOG):
     if not os.path.exists(work_dir):
         LOG.debug('Create %s as working directory ...' % work_dir)
         os.makedirs(work_dir)
+    LOG.debug('Checking for instances directory ...')
+    if not os.path.exists(instance_dir):
+        LOG.debug('Create %s as working directory ...' % work_dir)
+        os.makedirs(instance_dir)
+    LOG.debug('Checking for instance database ...')
+    if not os.path.exists(instance_record_file):
+        instances = {
+            'instances': {}
+        }
+        utils.save_json_data(instance_record_file, instances)
+
     LOG.debug('Checking for image directory ...')
     if not os.path.exists(image_dir):
         LOG.debug('Create %s as image directory ...' % image_dir)
@@ -67,7 +73,7 @@ def init(config, LOG):
             'remote': images,
             'local': {}
         }
-        utils.save_image_data(img_record_file, image_body)
+        utils.save_json_data(img_record_file, image_body)
 
 def serve(CONF, LOG):
     '''
