@@ -2,7 +2,7 @@
 
 ## What is OmniVirt
 
-OmniVirt is a lightweight and powerful virtualization management platformaimed to provide uniformed openEuler vm/container experience for Win/Mac/Linux users. 
+OmniVirt is a lightweight and powerful virtualization management platform aimed to provide uniformed openEuler vm/container experience for Win/Mac/Linux users. 
 
 ## Usage
 
