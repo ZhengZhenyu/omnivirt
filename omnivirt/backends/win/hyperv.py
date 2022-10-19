@@ -42,7 +42,8 @@ class WinInstanceHandler(object):
 
         info = _vmops.get_info(name)
         vm_dict['vm_state'] = constants.VM_STATE_MAP[info['EnabledState']]
-        ip = _vmops.get_instance_ip_addr(name)      
-        vm_dict['ip_address'] = ip
+        ip = _vmops.get_instance_ip_addr(name)
+        if ip: 
+            vm_dict['ip_address'] = ip
 
         return vm_dict

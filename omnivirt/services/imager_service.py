@@ -86,4 +86,4 @@ class ImagerService(images_pb2_grpc.ImageGrpcServiceServicer):
         elif ret == 1:
             msg = f'Image: {request.name} does not exist, please check again.'
 
-        return images_pb2.GeneralImageResponse(ret=0, msg=msg)
+        return images_pb2.GeneralImageResponse(ret=1, msg=msg)

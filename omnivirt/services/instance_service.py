@@ -33,7 +33,7 @@ class InstanceService(instances_pb2_grpc.InstanceGrpcServiceServicer):
                 'name': vm_obj.name,
                 'image': vm_obj.image,
                 'vm_state': vm_obj.vm_state,
-                'ip_address': vm_obj.ip
+                'ip_address': vm_obj.ip if vm_obj.ip else 'N/A'
             }
             ret.append(instance_dict)
             
@@ -44,11 +44,9 @@ class InstanceService(instances_pb2_grpc.InstanceGrpcServiceServicer):
         
         all_img = utils.load_image_data(self.img_record_file)
         if request.image not in all_img['local'].keys():
-            ret = 1
             msg = f'Error: Image "{request.image}" is not available locally, please check again or (down)load it before using ...'
-            return instances_pb2.CreateInstancesResponse(ret=ret, msg=msg)
+            return instances_pb2.CreateInstanceResponse(ret=2, msg=msg)
 
         vm = self.backend.create_instance(request.name, request.image, all_img)
-        ret = 0
         msg = f'Successfully created {request.name} with image {request.image}'
-        return instances_pb2.CreateInstancesResponse(ret=ret, msg=msg, instance=vm)
+        return instances_pb2.CreateInstanceResponse(ret=1, msg=msg, instance=vm)

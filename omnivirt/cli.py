@@ -74,7 +74,7 @@ def launch(vm_name, image):
 
     ret = omnivirt_client.create_instance(vm_name, image)
 
-    if ret['ret'] == 0:
+    if ret['ret'] == 1:
         tb = pt.PrettyTable()
         tb.field_names = ["Name", "Image", "State", "IP"]
         tb.add_row(
