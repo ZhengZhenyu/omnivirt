@@ -73,10 +73,16 @@ class Client(object):
 
     @omnivirt_utils.response2dict
     def list_instances(self):
-        """ [IMAGE] List instances
-
-        :param filters(list): None
+        """ List instances
         :return: dict -- list of instances' info
         """
 
         return self._instances.list()
+
+    @omnivirt_utils.response2dict
+    def create_instance(self, name, image):
+        """ Create instance
+        :return: dict -- dict of instance's info
+        """
+
+        return self._instances.create(name, image)

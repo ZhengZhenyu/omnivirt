@@ -16,11 +16,12 @@ class InstanceService(instances_pb2_grpc.InstanceGrpcServiceServicer):
     def __init__(self, conf) -> None:
         self.CONF = conf
         self.work_dir = self.CONF.conf.get('default', 'work_dir')
+        self.instance_dir = os.path.join(self.work_dir, 'instances')
         self.image_dir = os.path.join(self.work_dir, self.CONF.conf.get('default', 'image_dir'))
         self.img_record_file = os.path.join(self.image_dir, 'images.json')
         # TODO: Use different backend for different OS
         self.backend = win_instance_handler.WinInstanceHandler(
-            self.CONF, self.work_dir, self.image_dir, self.img_record_file, LOG)
+            self.CONF, self.work_dir, self.instance_dir, self.image_dir, self.img_record_file, LOG)
 
     def list_instances(self, request, context):
         LOG.debug(f"Get request to list instances ...")
@@ -37,3 +38,17 @@ class InstanceService(instances_pb2_grpc.InstanceGrpcServiceServicer):
             ret.append(instance_dict)
             
         return instances_pb2.ListInstancesResponse(instances=ret)
+    
+    def create_instance(self, request, context):
+        LOG.debug(f"Get request to create instance: {request.name} with image {request.image} ...")
+        
+        all_img = utils.load_image_data(self.img_record_file)
+        if request.image not in all_img['local'].keys():
+            ret = 1
+            msg = f'Error: Image "{request.image}" is not available locally, please check again or (down)load it before using ...'
+            return instances_pb2.CreateInstancesResponse(ret=ret, msg=msg)
+
+        vm = self.backend.create_instance(request.name, request.image, all_img)
+        ret = 0
+        msg = f'Successfully created {request.name} with image {request.image}'
+        return instances_pb2.CreateInstancesResponse(ret=ret, msg=msg, instance=vm)

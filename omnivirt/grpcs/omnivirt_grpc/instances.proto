@@ -6,6 +6,7 @@ option cc_generic_services = true;
 
 service InstanceGrpcService {
     rpc list_instances (ListInstancesRequest) returns (ListInstancesResponse) {}
+    rpc create_instance (CreateInstanceRequest) returns (CreateInstanceResponse) {}
 }
 
 
@@ -23,4 +24,15 @@ message ListInstancesRequest {
 
 message ListInstancesResponse {
     repeated Instance instances = 1;
+}
+
+message CreateInstanceRequest {
+    string name = 1;
+    string image = 2;
+}
+
+message CreateInstanceResponse {
+    uint32 ret = 1;
+    string msg = 2;
+    optional Instance instance = 3;
 }

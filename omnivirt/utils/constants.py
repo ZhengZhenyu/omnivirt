@@ -26,5 +26,6 @@ VM_STATE_MAP = {
     3: 'Stopped',
     11: 'Rebooting',
     9: 'Paused',
-    6: 'Suspended'
+    6: 'Suspended',
+    99: 'N/A'
     }

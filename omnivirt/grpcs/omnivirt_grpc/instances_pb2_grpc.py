@@ -19,12 +19,23 @@ class InstanceGrpcServiceStub(object):
                 request_serializer=instances__pb2.ListInstancesRequest.SerializeToString,
                 response_deserializer=instances__pb2.ListInstancesResponse.FromString,
                 )
+        self.create_instance = channel.unary_unary(
+                '/omnivirt.InstanceGrpcService/create_instance',
+                request_serializer=instances__pb2.CreateInstanceRequest.SerializeToString,
+                response_deserializer=instances__pb2.CreateInstanceResponse.FromString,
+                )
 
 
 class InstanceGrpcServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def list_instances(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def create_instance(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,6 +48,11 @@ def add_InstanceGrpcServiceServicer_to_server(servicer, server):
                     servicer.list_instances,
                     request_deserializer=instances__pb2.ListInstancesRequest.FromString,
                     response_serializer=instances__pb2.ListInstancesResponse.SerializeToString,
+            ),
+            'create_instance': grpc.unary_unary_rpc_method_handler(
+                    servicer.create_instance,
+                    request_deserializer=instances__pb2.CreateInstanceRequest.FromString,
+                    response_serializer=instances__pb2.CreateInstanceResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +78,22 @@ class InstanceGrpcService(object):
         return grpc.experimental.unary_unary(request, target, '/omnivirt.InstanceGrpcService/list_instances',
             instances__pb2.ListInstancesRequest.SerializeToString,
             instances__pb2.ListInstancesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def create_instance(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/omnivirt.InstanceGrpcService/create_instance',
+            instances__pb2.CreateInstanceRequest.SerializeToString,
+            instances__pb2.CreateInstanceResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

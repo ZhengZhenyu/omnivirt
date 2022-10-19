@@ -5,11 +5,12 @@ from omnivirt import omnivirtd
 from omnivirt.grpcs import client
 
 
+omnivirt_client = client.Client()
+
 # List all instances on the host
 @click.command()
 def list():
 
-    omnivirt_client = client.Client()
     ret = omnivirt_client.list_instances()
     tb = pt.PrettyTable()
 
@@ -29,7 +30,6 @@ def list():
 @click.command()
 def images():
 
-    omnivirt_client = client.Client()
     ret = omnivirt_client.list_images()
     tb = pt.PrettyTable()
 
@@ -45,7 +45,7 @@ def images():
 @click.command()
 @click.argument('name')
 def download_image(name):
-    omnivirt_client = client.Client()
+
     ret = omnivirt_client.download_image(name)
     print(ret['msg'])
 
@@ -54,7 +54,7 @@ def download_image(name):
 @click.argument('name')
 @click.option('--path', help='Image file to load')
 def load_image(name, path):
-    omnivirt_client = client.Client()
+
     ret = omnivirt_client.load_image(name, path)
     print(ret['msg'])
 
@@ -62,7 +62,7 @@ def load_image(name, path):
 @click.command()
 @click.argument('name')
 def delete_image(name):
-    omnivirt_client = client.Client()
+
     ret = omnivirt_client.delete_image(name)
     print(ret['msg'])
 
@@ -71,12 +71,22 @@ def delete_image(name):
 @click.argument('vm_name')
 @click.option('--image', help='Image to build vm')
 def launch(vm_name, image):
-    ret = omnivirtd.create_instance(vm_name, image)
-    if ret:
+
+    ret = omnivirt_client.create_instance(vm_name, image)
+
+    if ret['ret'] == 0:
         tb = pt.PrettyTable()
-        tb.field_names = ["Name", "Image", "IP Address"]
-        tb.add_row([ret['Name'], ret['Image'], ret['IP Address']])
+        tb.field_names = ["Name", "Image", "State", "IP"]
+        tb.add_row(
+            [ret['instance']['name'],
+            ret['instance']['image'],
+            ret['instance']['vmState'],
+            ret['instance']['ipAddress']])
+
         print(tb)
+    
+    else:
+        print(ret['msg'])
 
 
 @click.group()
