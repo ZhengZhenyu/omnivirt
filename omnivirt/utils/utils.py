@@ -1,7 +1,10 @@
 import functools
-import os
-from threading import Thread
 import json
+import os
+import random
+from threading import Thread
+import uuid
+
 
 from google.protobuf.json_format import MessageToDict
 
@@ -56,3 +59,13 @@ def load_json_data(json_file):
 def save_json_data(json_file, data):
     with open(json_file, 'w', encoding='utf-8') as fw:
             json.dump(data, fw, indent=4, ensure_ascii=False)
+
+def generate_mac():
+    local_mac = uuid.uuid1().hex[-12:]
+
+    mac = [random.randint(0x00, 0xff), random.randint(0x00, 0xff)]
+    s = [local_mac[0:2], local_mac[2:4], local_mac[4:6], local_mac[6:8]]
+    for item in mac:
+        s.append(str("%02x" % item))
+
+    return (':'.join(s))

@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from oslo_utils import uuidutils
+
 from omnivirt.backends.win import powershell
 from omnivirt.backends.win import vmops
 from omnivirt.utils import constants
@@ -29,9 +31,15 @@ class WinInstanceHandler(object):
         # Create dir for the instance
         vm_dict = {
             'name': name,
+            'uuid': uuidutils.generate_uuid(),
             'image': image_id,
             'vm_state': constants.VM_STATE_MAP[99],
-            'ip_address': 'N/A'
+            'ip_address': 'N/A',
+            'mac_address': 'N/A',
+            'identification': {
+                'type': 'name',
+                'id': name
+            }
         }
 
         instance_path = os.path.join(self.instance_dir, name)
@@ -39,21 +47,26 @@ class WinInstanceHandler(object):
         img_path = all_images['local'][image_id]['path']
     
         root_disk_path = shutil.copyfile(img_path, os.path.join(instance_path, image_id + '.vhdx'))
-        _vmops.build_and_run_vm(name, image_id, False, 2, instance_path, root_disk_path)
-
-        instance_record_dict = {
-            'name': name,
-            'path': instance_path
-        }
-
-        all_instances['instances'][name] = instance_record_dict
-        omni_utils.save_json_data(instance_record, all_instances)
+        _vmops.build_and_run_vm(name, vm_dict['uuid'], image_id, False, 2, instance_path, root_disk_path)
 
         info = _vmops.get_info(name)
         vm_dict['vm_state'] = constants.VM_STATE_MAP[info['EnabledState']]
         ip = _vmops.get_instance_ip_addr(name)
         if ip: 
             vm_dict['ip_address'] = ip
+        
+        instance_record_dict = {
+            'name': name,
+            'uuid': vm_dict['uuid'],
+            'image': image_id,
+            'path': instance_path,
+            'mac_address': vm_dict['mac_address'],
+            'ip_address': vm_dict['ip_address'],
+            'identification': vm_dict['identification']
+        }
+
+        all_instances['instances'][name] = instance_record_dict
+        omni_utils.save_json_data(instance_record, all_instances)
 
         return vm_dict
     

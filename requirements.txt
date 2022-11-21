@@ -4,3 +4,4 @@ wget
 grpcio-tools
 os-win
 configparser
+libvirt-python

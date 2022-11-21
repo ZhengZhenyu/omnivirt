@@ -1,7 +1,7 @@
 import logging
 import os
 
-from omnivirt.backends.win import hyperv as win_instance_handler
+from omnivirt.backends.win import instance_handler as win_instance_handler
 from omnivirt.grpcs.omnivirt_grpc import instances_pb2, instances_pb2_grpc
 from omnivirt.utils import utils
 

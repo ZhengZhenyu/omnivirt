@@ -100,9 +100,9 @@ class VMOps(object):
                                 instance_path,
                                 [json.dumps(meta_data)])
 
-    def build_and_run_vm(self, vm_name, image_name, vnuma_enabled, vm_gen, instance_path, root_disk_path):
+    def build_and_run_vm(self, vm_name, uuid, image_name, vnuma_enabled, vm_gen, instance_path, root_disk_path):
         meta_data = {
-            'uuid': uuidutils.generate_uuid(),
+            'uuid': uuid,
             'image': image_name,
             'creator': 'omnivirt'
         }

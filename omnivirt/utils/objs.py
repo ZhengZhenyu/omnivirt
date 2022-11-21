@@ -9,6 +9,7 @@ class Instance(object):
     def __init__(self, name='') -> None:
         self.name = name
         self.uuid = ''
+        self.identifier = {}
         self.metadata = None
         self.vm_state = None
         self.vcpu = None
@@ -17,6 +18,7 @@ class Instance(object):
         self.info = None
         self.image = None
         self.ip = 'N/A'
+        self.mac = 'N/A'
 
 
 class Image(object):
