@@ -56,3 +56,6 @@ class NoSuchFile(OmniVirtException):
 
 class NoConfigFileProvided(OmniVirtException):
     msg_fmt = "Config File Should Be Provided"
+
+class OmniVirtdNotAvailable(OmniVirtException):
+    msg_fmt = "OmniVirtd Daemon is not available"

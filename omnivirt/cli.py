@@ -1,8 +1,9 @@
 import click
 import prettytable as pt
 
-from omnivirt import omnivirtd
 from omnivirt.grpcs import client
+from omnivirt.utils import utils as omni_utils
+from omnivirt.utils import exceptions
 
 
 omnivirt_client = client.Client()
@@ -11,43 +12,58 @@ omnivirt_client = client.Client()
 @click.command()
 def list():
 
-    ret = omnivirt_client.list_instances()
-    tb = pt.PrettyTable()
+    try:
+        ret = omnivirt_client.list_instances()
+    except Exception:
+        print('Calling to OmniVirtd daemon failed, please check OmniVirtd daemon status ...')
+    else:
+        tb = pt.PrettyTable()
 
-    tb.field_names = ["Name", "Image", "State", "IP"]
+        tb.field_names = ["Name", "Image", "State", "IP"]
 
-    for instance in ret['instances']:
-        tb.add_row(
-            [instance['name'],
-            instance['image'],
-            instance['vmState'],
-            instance['ipAddress']])
+        try:
+            for instance in ret['instances']:
+                tb.add_row(
+                    [instance['name'],
+                    instance['image'],
+                    instance['vmState'],
+                    instance['ipAddress']])
+        except KeyError:
+            pass
 
-    print(tb)
+        print(tb)
 
 
 # List all usable images
 @click.command()
 def images():
 
-    ret = omnivirt_client.list_images()
-    tb = pt.PrettyTable()
+    try:
+        ret = omnivirt_client.list_images()
+    except Exception:
+        print('Calling to OmniVirtd daemon failed, please check OmniVirtd daemon status ...')
+    else:
+        tb = pt.PrettyTable()
 
-    tb.field_names = ["Images", "Location", "Status"]
+        tb.field_names = ["Images", "Location", "Status"]
 
-    for image in ret['images']:
-        tb.add_row(
-            [image['name'], image['location'], image['status']])
+        for image in ret['images']:
+            tb.add_row(
+                [image['name'], image['location'], image['status']])
 
-    print(tb)
+        print(tb)
 
 
 @click.command()
 @click.argument('name')
 def download_image(name):
 
-    ret = omnivirt_client.download_image(name)
-    print(ret['msg'])
+    try:
+        ret = omnivirt_client.download_image(name)
+    except Exception:
+        print('Calling to OmniVirtd daemon failed, please check OmniVirtd daemon status ...')
+    else:
+        print(ret['msg'])
 
 
 @click.command()
@@ -55,45 +71,61 @@ def download_image(name):
 @click.option('--path', help='Image file to load')
 def load_image(name, path):
 
-    ret = omnivirt_client.load_image(name, path)
-    print(ret['msg'])
+    try:
+        ret = omnivirt_client.load_image(name, path)
+    except Exception:
+        print('Calling to OmniVirtd daemon failed, please check OmniVirtd daemon status ...')
+    else:
+        print(ret['msg'])
 
 
 @click.command()
 @click.argument('name')
 def delete_image(name):
 
-    ret = omnivirt_client.delete_image(name)
-    print(ret['msg'])
+    try:
+        ret = omnivirt_client.delete_image(name)
+    except Exception:
+        print('Calling to OmniVirtd daemon failed, please check OmniVirtd daemon status ...')
+    else:
+        print(ret['msg'])
 
 
 @click.command()
 @click.argument('name')
 def delete_instance(name):
 
-    ret = omnivirt_client.delete_instance(name)
-    print(ret['msg'])
+    try:
+        ret = omnivirt_client.delete_instance(name)
+    except Exception:
+        print('Calling to OmniVirtd daemon failed, please check OmniVirtd daemon status ...')
+    else:
+        print(ret['msg'])
 
 @click.command()
 @click.argument('vm_name')
 @click.option('--image', help='Image to build vm')
 def launch(vm_name, image):
 
-    ret = omnivirt_client.create_instance(vm_name, image)
-
-    if ret['ret'] == 1:
-        tb = pt.PrettyTable()
-        tb.field_names = ["Name", "Image", "State", "IP"]
-        tb.add_row(
-            [ret['instance']['name'],
-            ret['instance']['image'],
-            ret['instance']['vmState'],
-            ret['instance']['ipAddress']])
-
-        print(tb)
-    
+    try:
+        ret = omnivirt_client.create_instance(vm_name, image)
+    except Exception:
+        print('Calling to OmniVirtd daemon failed, please check OmniVirtd daemon status ...')
     else:
-        print(ret['msg'])
+
+        if ret['ret'] == 1:
+            tb = pt.PrettyTable()
+            tb.field_names = ["Name", "Image", "State", "IP"]
+            tb.add_row(
+                [ret['instance']['name'],
+                ret['instance']['image'],
+                ret['instance']['vmState'],
+                ret['instance']['ipAddress']])
+
+            print(tb)
+    
+        else:
+            print(ret['msg'])
 
 
 @click.group()

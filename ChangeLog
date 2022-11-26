@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+* Add mac backend
+* Update README.md
+* Add readme
 * Debug instance create command
 * Add create instance function
 * Finalize instance list operation

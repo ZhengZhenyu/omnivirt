@@ -69,3 +69,13 @@ def generate_mac():
         s.append(str("%02x" % item))
 
     return (':'.join(s))
+
+def catch_exception(func):
+
+    def wrap(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            raise exceptions.OmniVirtdNotAvailable
+    
+    return wrap

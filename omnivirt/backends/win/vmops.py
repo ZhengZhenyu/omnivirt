@@ -35,7 +35,11 @@ class VMOps(object):
         self._vmutils = VMUtils_omni()
         self._netutils = utilsfactory.get_networkutils()
         self._hostutils = utilsfactory.get_hostutils()
-    
+
+    def _set_vm_state(self, instance, req_state):
+        instance_name = instance.name
+        self._vmutils.set_vm_state(instance_name, req_state)
+
     def list_instance_uuids(self):
         instance_uuids = []
         for (instance_name, notes) in self._vmutils.list_instance_notes():

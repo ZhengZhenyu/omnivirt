@@ -2,6 +2,10 @@ from concurrent import futures
 import grpc
 import logging
 import os
+import PIL.Image
+import platform
+import pystray
+import requests
 import sys
 import time
 
@@ -11,6 +15,9 @@ from omnivirt.services import imager_service, instance_service
 from omnivirt.utils import constants
 from omnivirt.utils import objs
 from omnivirt.utils import utils
+
+
+IMG_URL = 'https://gitee.com/openeuler/omnivirt/raw/master/etc/supported_images.json'
 
 def config_logging(config):
     log_dir = config.conf.get('default', 'log_dir')
@@ -37,6 +44,8 @@ def init(config, LOG):
     instance_record_file = os.path.join(instance_dir, 'instances.json')
     img_record_file = os.path.join(image_dir, 'images.json')
 
+    host_arch = platform.uname().machine
+
     LOG.debug('Initializing OmniVirtd ...')
     LOG.debug('Checking for work directory ...')
     if not os.path.exists(work_dir):
@@ -59,9 +68,11 @@ def init(config, LOG):
         os.makedirs(image_dir)
 
     LOG.debug('Checking for image database ...')
+    remote_img_resp = requests.get(IMG_URL)
+    remote_imgs = remote_img_resp.json()[constants.ARCH_MAP[host_arch]]
     if not os.path.exists(img_record_file):
         images = {}
-        for name, path in constants.OPENEULER_IMGS.items():
+        for name, path in remote_imgs.items():
             image = objs.Image()
             image.name = name
             image.path = path
@@ -85,24 +96,33 @@ def serve(CONF, LOG):
     server.add_insecure_port('[::]:50052')
     server.start()
     LOG.debug('OmniVirtd Service Started ...')
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        server.stop(0)
-        LOG.debug('OmniVirtd Service Stopped ...')
+    
+    return server
 
 
 if __name__ == '__main__':
     try:
-        CONF = utils.parse_config(sys.argv[1:])
+        CONF = objs.Conf('.\\omnivirt.conf')
         
         config_logging(CONF)
         LOG = logging.getLogger(__name__)
 
         init(CONF, LOG)
+
+        logo = PIL.Image.open('.\\favicon.png')
+
+        def on_clicked(icon, item):
+            icon.stop()
+        
+        icon = pystray.Icon('OmniVirt', logo, menu=pystray.Menu(
+            pystray.MenuItem('Exit OmniVirt', on_clicked)
+        ))
+
     except Exception as e:
         print('Error: ' + str(e))
     else:
         LOG.debug('Starting Service ...')
-        serve(CONF, LOG)
+        grpc_server = serve(CONF, LOG)
+        icon.run()
+        grpc_server.stop(None)
+        sys.exit(0)
